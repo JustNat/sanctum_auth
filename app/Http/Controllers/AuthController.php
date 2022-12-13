@@ -14,14 +14,17 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator =  Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => ['email', 'unique:users,email', 'required'],
-            'password' => [
+            'nome' => 'required',
+            'sobrenome' => 'required',
+            'cpf' => ['required', 'numeric'],
+            'email' => ['email', 'unique:usuario,email', 'required'],
+            'senha' => [
                 'required', 'confirmed',
                 Password::min(8)
                     ->mixedCase()
-                    ->numbers()->letters()->symbols()->uncompromised()
-            ]
+                    ->numbers()->letters()->symbols()
+            ],
+            'matricula' => ['nullable', 'numeric']
         ]);
 
         if ($validator->fails()) {
@@ -30,9 +33,12 @@ class AuthController extends Controller
 
         try {
             $user = User::create([
-                'name' => $request->name,
+                'nome' => $request->nome,
+                'sobrenome' => $request->sobrenome,
+                'cpf' => $request->cpf,
                 'email' => $request->email,
-                'password' => Hash::make($request->password)
+                'senha' => Hash::make($request->senha),
+                'matricula' => $request->matricula
             ]);
             return response()->json(['message' => 'Usuário cadastrado', 'user' => $user], 201);
         } catch (\Exception $e) {
@@ -47,7 +53,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => ['required', 'email'],
-            'password' => [
+            'senha' => [
                 'required',
                 Password::min(8)
                     ->mixedCase()
@@ -59,7 +65,7 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 400);
         }
         // tentativa de login 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->senha])) {
             $user = Auth::user();
             $token = $user->createToken('JWT');
             return response()->json(['message' => 'Login efetuado', 'user' => $user, 'token' => $token], 200);
@@ -73,7 +79,7 @@ class AuthController extends Controller
             auth()->user()->currentAccessToken()->delete();
             return response()->json([], 204);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Não foi possível realizar a operação'], 500);
+            return response()->json(['message' => 'Não foi possível realizar a operação', 'errors' => $e], 500);
         }
     }
     // a rota só pode ser acessada por um token válido, quando acessada ela retorna true para authenticated

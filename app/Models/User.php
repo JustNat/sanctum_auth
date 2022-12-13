@@ -12,26 +12,33 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    // quais colunas podem ser atribuidas valores
     protected $fillable = [
-        'name',
+        'nome',
+        'sobrenome',
+        'cpf',
         'email',
-        'password',
+        'senha',
+        'status',
+        'matricula'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
+    // quais colunas não podem ser mostradas em respostas
     protected $hidden = [
-        'password',
-        'remember_token',
+        'senha',
     ];
+
+    // informa ao laravel a tabela que o model se refere
+    protected $table = 'usuario';
+
+    // diz ao laravel não criar as colunas created_at e updaded_at
+    public $timestamps = false;
+
+    // informa que nos métodos da classe Auth se utilize 'senha' ao invés de 'password'
+    public function getAuthPassword()
+    {
+        return $this->senha;
+    }
 
     /**
      * The attributes that should be cast.
