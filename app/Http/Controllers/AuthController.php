@@ -21,6 +21,7 @@ class AuthController extends Controller
             'email' => ['email', 'unique:usuario,email', 'required'],
             'senha' => [
                 'required', 'confirmed',
+                // senha deve haver letras maiusculas e minusculas, letras, numeros, simbolos e ao menos 8 caracteres
                 Password::min(8)
                     ->mixedCase()
                     ->numbers()->letters()->symbols()
@@ -76,8 +77,8 @@ class AuthController extends Controller
                 ->join('permissao', 'permissao.id', '=', 'usuario_permissao.id_permissao')
                 ->where('permissao.id', '=', '5')->where('usuario.id', '=', $user['id'])->get();
 
-            // se a querry não tiver nada, ele não é adm
-            if (!count($isAdmin)) {
+            // se a querry estiver vazia, usuário não é admin
+            if ($isAdmin->isEmpty()) {
                 $token = $user->createToken('JWT');
                 return response()->json([
                     'message' => 'Login efetuado',
@@ -86,7 +87,7 @@ class AuthController extends Controller
                     'token' => $token
                 ], 200);
 
-                // se tiver, seu token terá a habilidade de admin
+                // senão estiver, seu token terá a habilidade de admin
             } else {
                 $token = $user->createToken('JWT', ['server:admin']);
                 return response()->json([
