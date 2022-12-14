@@ -8,6 +8,7 @@ use Illuminate\Validation\Rules\Password;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -20,6 +21,7 @@ class AuthController extends Controller
             'email' => ['email', 'unique:usuario,email', 'required'],
             'senha' => [
                 'required', 'confirmed',
+                // senha deve haver letras maiusculas e minusculas, letras, numeros, simbolos e ao menos 8 caracteres
                 Password::min(8)
                     ->mixedCase()
                     ->numbers()->letters()->symbols()
@@ -64,11 +66,37 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+
         // tentativa de login 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->senha])) {
+            // pega o usuário autenticado
             $user = Auth::user();
-            $token = $user->createToken('JWT');
-            return response()->json(['message' => 'Login efetuado', 'user' => $user, 'token' => $token], 200);
+            // se o usuário for admin, essa querry o retornará
+            $isAdmin = DB::table('usuario_permissao')->select('*')
+                ->join('usuario', 'usuario.id', '=', 'usuario_permissao.id_usuario')
+                ->join('permissao', 'permissao.id', '=', 'usuario_permissao.id_permissao')
+                ->where('permissao.id', '=', '5')->where('usuario.id', '=', $user['id'])->get();
+
+            // se a querry estiver vazia, usuário não é admin
+            if ($isAdmin->isEmpty()) {
+                $token = $user->createToken('JWT');
+                return response()->json([
+                    'message' => 'Login efetuado',
+                    'user' => $user,
+                    'isAdmin' => false,
+                    'token' => $token
+                ], 200);
+
+                // senão estiver, seu token terá a habilidade de admin
+            } else {
+                $token = $user->createToken('JWT', ['server:admin']);
+                return response()->json([
+                    'message' => 'Login efetuado',
+                    'user' => $user,
+                    'isAdmin' => true,
+                    'token' => $token
+                ], 200);
+            }
         }
 
         return response()->json(['message' => 'Credenciais incorretas'], 401);
