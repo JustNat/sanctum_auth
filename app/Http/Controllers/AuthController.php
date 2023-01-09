@@ -118,8 +118,8 @@ class AuthController extends Controller
 
     public function matheus()
     {
-        // return response()->json(['session' => $_SESSION['usuario']], 200);
+        return response()->json(['session' => $_SESSION['usuario']], 200);
 
-        return response()->json(['session' => 'sim'], 200);
+        //return response()->json(['session' => 'sim'], 200);
     }
 }
