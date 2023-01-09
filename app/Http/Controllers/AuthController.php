@@ -64,7 +64,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['message' => $validator->errors()], 400);
         }
 
         // tentativa de login 
@@ -104,7 +104,7 @@ class AuthController extends Controller
     public function logout()
     {
         try {
-            auth()->user()->currentAccessToken()->delete();
+            auth()->user()->tokens()->delete();
             return response()->json([], 204);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Não foi possível realizar a operação', 'errors' => $e], 500);
