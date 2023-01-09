@@ -115,4 +115,9 @@ class AuthController extends Controller
     {
         return response()->json(['authenticated' => true], 200);
     }
+
+    public function matheus()
+    {
+        return response()->json(['session' => $_SESSION['usuario']], 200);
+    }
 }
