@@ -1,0 +1,15 @@
+#tableOS tr{
+    cursor: pointer;
+}
+
+#osModal tr{
+    cursor: inherit !important;
+}
+
+.form-control{
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #ccc !important;
+    background-color: #fff !important;
+    color: #222 !important;
+}
