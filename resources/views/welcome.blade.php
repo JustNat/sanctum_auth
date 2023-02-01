@@ -16,11 +16,8 @@
     <link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css">
 
     <!-- Font Awesome PRO FREE CHECK IT OUT CLICK HERE 2023 -->
-    <link
-        rel="stylesheet"
-        href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p"
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
     <!-- Google Font: Source Roboto -->
     <link
@@ -28,9 +25,7 @@
         rel="stylesheet" />
 
     <!-- Google Font: Source Sans Pro -->
-    <link
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
 
     <link rel="stylesheet" href="css/utils/utils.css">
     <link rel="stylesheet" href="css/adminlte/adminlte.min.css">
@@ -39,34 +34,13 @@
 
     <!-- Datatables -->
     <link rel="stylesheet" href="css/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="css/sweetalert2/sweetalert2.css">
 
     <title>Login</title>
 
 </head>
 
 <body>
-
-    {{-- <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 9999999">
-
-        <div id="errorToastMain" class="toast align-items-center text-white border-0" role="alert"
-             aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
-
-            <div class="d-flex">
-
-                <div class="toast-body" id="toast-message">
-                    mensagem
-                </div>
-
-            </div>
-
-        </div>
-
-    </div> --}}
-
-    {{-- <div class="loader-div">
-        <div class="loader mb-0"></div>
-        <h1 class="text-center mt-4">Carregando...</h1>
-    </div> --}}
 
     <main class="vh-100">
 
@@ -79,7 +53,8 @@
                     <form method="post">
                         <h1>Paciente</h1>
                         <input type="text" id="registro" name="registro" placeholder="Registro" required>
-                        <input type="date" id="dataNascimento" name="dataNascimento" placeholder="Data de Nascimento" required>
+                        <input type="date" id="dataNascimento" name="dataNascimento" placeholder="Data de Nascimento"
+                            required>
                         <input type="text" id="cpf" name="cpf" class="cpf" placeholder="CPF" required>
                         <input type="email" id="email" name="email" placeholder="Email" required>
                         <button class="mt-4">Entrar</button>
@@ -90,7 +65,8 @@
 
                 <div class="form-container sign-in-container col-md-6 col-12">
 
-                    <form method="post">
+                    <form id="formLoginFuncionario" method="post">
+                        @csrf
                         <h1>Funcionário</h1>
                         <input type="email" placeholder="Email" id="inputEmail" name="email" required />
                         <input type="password" placeholder="Senha" id="inputSenha" name="senha" required />
@@ -153,35 +129,58 @@
     <script src="js/customs/auth/script.js"></script>
     <script src="js/customs/ouvidoria/script.js"></script>
     <script src="js/customs/home/script.js"></script>
+    <script src="js/sweetalert2/sweetalert2.js"></script>
+
+    <script>
+
+        $(document).ready(() => {
+
+            $('.login-patient').on('click', () => {
+                $('.login-container').addClass('right-panel-active');
+            })
+
+            $('.login-agent').on('click', () => {
+                $('.login-container').removeClass('right-panel-active');
+            })
+
+            $('#formLoginFuncionario').on('submit', (e) => {
+
+                e.preventDefault();
+
+                let email = $("#inputEmail").val();
+                let senha = $("#inputSenha").val();
+
+                $.ajax({
+                    url: 'api/login',
+                    type: 'POST',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        email: email,
+                        senha: senha
+                    },
+                    success: (response) => {
+
+                        console.log(response);
+
+                        if (response.status==200) {
+                            window.location.href = '/home';
+                        }
 
 
-<script>
-    $(document).ready(() => {
+                    },
+                    error: (error) => {
 
-      $('.login-patient').on('click', () => {
-        $('.login-container').addClass('right-panel-active');
-      })
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Erro ao realizar o login!',
+                            text: error.responseJSON.message,
+                        })
+                    }
+                })
+            })
 
-      $('.login-agent').on('click', () => {
-        $('.login-container').removeClass('right-panel-active');
-      })
-
-      errorToastEl = document.getElementById('errorToast') ?? false;
-      var errorToast = null;
-      if (errorToastEl) {
-        errorToast = new bootstrap.Toast(errorToastEl) // Returns a Bootstrap toast instance
-        errorToast.show();
-      }
-
-      welcomeToastEl = document.getElementById('welcome-toast') ?? false;
-      if (welcomeToastEl) {
-        welcomeToast = new bootstrap.Toast(welcomeToastEl) // Returns a Bootstrap toast instance
-        welcomeToast.show();
-      }
-    })
-
-
-  </script>
+        })
+    </script>
 
 </body>
 
