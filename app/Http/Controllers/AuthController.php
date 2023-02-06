@@ -120,11 +120,4 @@ class AuthController extends Controller
         return response()->json(['authenticated' => true], 200);
     }
 
-    public function matheus()
-    {
-        session_start();
-        return response()->json(['session' => $_SESSION['usuario']], 200);
-
-        //return response()->json(['session' => 'sim'], 200);
-    }
 }

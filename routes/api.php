@@ -25,5 +25,3 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('/logout', 'logout')->middleware('auth:sanctum');
     Route::get('/verify', 'verify')->middleware('auth:sanctum');
 });
-
-Route::get('/matheus', [AuthController::class, 'matheus']);
