@@ -16,13 +16,10 @@
     <link rel="stylesheet" href="css/bootstrap/css/bootstrap.min.css">
 
     <!-- Font Awesome PRO FREE CHECK IT OUT CLICK HERE 2023 -->
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
-        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
     <!-- Google Font: Source Roboto -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet" />
 
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet" />
@@ -53,8 +50,7 @@
                     <form method="post">
                         <h1>Paciente</h1>
                         <input type="text" id="registro" name="registro" placeholder="Registro" required>
-                        <input type="date" id="dataNascimento" name="dataNascimento" placeholder="Data de Nascimento"
-                            required>
+                        <input type="date" id="dataNascimento" name="dataNascimento" placeholder="Data de Nascimento" required>
                         <input type="text" id="cpf" name="cpf" class="cpf" placeholder="CPF" required>
                         <input type="email" id="email" name="email" placeholder="Email" required>
                         <button class="mt-4">Entrar</button>
@@ -132,7 +128,6 @@
     <script src="js/sweetalert2/sweetalert2.js"></script>
 
     <script>
-
         $(document).ready(() => {
 
             $('.login-patient').on('click', () => {
@@ -162,7 +157,7 @@
 
                         console.log(response);
 
-                        if (response.status==200) {
+                        if (response.status == 200) {
                             window.location.href = '/home';
                         }
 
